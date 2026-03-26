@@ -8,22 +8,28 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   :root {
-    --bg: #080508;
-    --bg2: #100d11;
-    --bg3: #181219;
+    --bg: #060407;
+    --bg2: #0e0b10;
+    --bg3: #15101a;
+    --bg4: #1c1424;
     --carl: #FF6B1A;
     --carl2: #FFB347;
-    --carl-glow: rgba(255,107,26,0.35);
-    --donut: #9B59B6;
+    --carl-dim: rgba(255,107,26,0.15);
+    --carl-glow: rgba(255,107,26,0.5);
+    --donut: #A855D4;
     --donut2: #FFD700;
-    --donut-glow: rgba(155,89,182,0.35);
-    --text: #ddd0c8;
-    --dim: #6a5a55;
+    --donut-dim: rgba(168,85,212,0.15);
+    --donut-glow: rgba(168,85,212,0.5);
+    --text: #e8ddd4;
+    --text2: #a8998f;
+    --dim: #5a4a50;
     --gold: #FFD700;
-    --border: #231520;
-    --section: #13101a;
+    --border: #1e1428;
+    --border2: #2a1e35;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
   body {
     background: var(--bg);
     color: var(--text);
@@ -31,323 +37,471 @@
     min-height: 100vh;
     overflow-x: hidden;
   }
+
+  /* ── SCANLINE + GRAIN OVERLAY ── */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    background:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.03) 2px,
+        rgba(0,0,0,0.03) 4px
+      ),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
     pointer-events: none;
-    z-index: 0;
+    z-index: 100;
   }
-  * { position: relative; }
 
-  /* HEADER */
+  /* ── HEADER ── */
   header {
     text-align: center;
-    padding: 2.5rem 1rem 1.5rem;
-    border-bottom: 1px solid #1f1020;
-    background: linear-gradient(180deg, rgba(255,107,26,0.06) 0%, transparent 100%);
+    padding: 3rem 1rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,107,26,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 30% at 20% 100%, rgba(168,85,212,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,107,26,0.4) 30%, rgba(168,85,212,0.4) 70%, transparent 100%);
+  }
+
+  .title-eyebrow {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 0.5rem;
   }
   .title {
     font-family: 'Nunito', sans-serif;
     font-weight: 900;
-    font-size: clamp(2.8rem, 8.5vw, 6.5rem);
-    letter-spacing: -0.01em;
+    font-size: clamp(3rem, 9vw, 7rem);
+    letter-spacing: -0.02em;
+    line-height: 0.95;
     color: var(--carl);
     text-shadow:
-      0 0 25px rgba(255,107,26,0.9),
-      0 0 60px rgba(255,107,26,0.4),
-      3px 3px 0 #1a0800;
-    line-height: 1;
+      0 0 40px rgba(255,107,26,1),
+      0 0 80px rgba(255,107,26,0.5),
+      0 0 140px rgba(255,107,26,0.2),
+      4px 4px 0 rgba(0,0,0,0.8);
+    position: relative;
   }
   .subtitle {
-    font-size: clamp(0.75rem, 2vw, 1rem);
-    font-weight: 600;
-    letter-spacing: 0.5em;
+    font-size: clamp(0.65rem, 1.8vw, 0.85rem);
+    font-weight: 700;
+    letter-spacing: 0.45em;
     color: var(--dim);
     text-transform: uppercase;
-    margin-top: 0.4rem;
-  }
-  .title-line {
-    width: 220px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--carl), transparent);
-    margin: 1rem auto 0;
+    margin-top: 0.6rem;
   }
 
-  /* PAGE LOOKUP */
+  /* ── LOOKUP BAR ── */
+  .lookup-wrap {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 1.25rem 1.25rem 0;
+  }
   .lookup-bar {
-    max-width: 900px;
-    margin: 1.5rem auto;
-    padding: 0 1rem;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 0.85rem 1.25rem;
     display: flex;
     gap: 0.75rem;
     align-items: center;
     flex-wrap: wrap;
   }
   .lookup-bar label {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     font-weight: 700;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
     color: var(--dim);
     white-space: nowrap;
   }
-  .lookup-bar select, .lookup-bar input {
-    background: var(--bg2);
-    border: 1px solid var(--border);
+  .lookup-bar select, .lookup-bar input[type=number] {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
     color: var(--text);
     font-family: 'Share Tech Mono', monospace;
-    font-size: 0.9rem;
-    padding: 0.4rem 0.7rem;
-    border-radius: 4px;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.65rem;
+    border-radius: 6px;
     outline: none;
+    transition: border-color 0.15s;
   }
   .lookup-bar select:focus, .lookup-bar input:focus {
     border-color: var(--carl);
+    box-shadow: 0 0 0 2px rgba(255,107,26,0.12);
   }
-  .lookup-bar input { width: 80px; }
+  .lookup-bar input[type=number] { width: 75px; }
   .lookup-btn {
-    background: var(--carl);
+    background: linear-gradient(135deg, var(--carl), #e05510);
     color: #000;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.1rem;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 0.85rem;
     letter-spacing: 0.1em;
-    padding: 0.35rem 1.2rem;
+    padding: 0.42rem 1.4rem;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: transform 0.1s, box-shadow 0.15s;
+    box-shadow: 0 2px 12px rgba(255,107,26,0.3);
   }
-  .lookup-btn:hover { background: var(--carl2); }
+  .lookup-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(255,107,26,0.5);
+  }
+  .lookup-btn:active { transform: translateY(0); }
+  .lookup-divider {
+    width: 1px; height: 1.2rem;
+    background: var(--border2);
+    margin: 0 0.25rem;
+  }
   .lookup-info {
-    font-size: 0.78rem;
+    font-size: 0.72rem;
+    font-weight: 600;
     color: var(--dim);
-    padding: 0 1rem;
-    max-width: 900px;
-    margin: 0 auto 0.5rem;
-    text-align: center;
+    margin-left: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
   }
+  @media (max-width: 600px) { .lookup-info, .lookup-divider { display: none; } }
 
-  /* MAIN GRID */
+  /* ── MAIN GRID ── */
   main {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.25rem;
-    padding: 0 1.25rem 1.25rem;
+    padding: 1.25rem;
     max-width: 1300px;
     margin: 0 auto;
   }
-  @media (max-width: 720px) { main { grid-template-columns: 1fr; } }
+  @media (max-width: 740px) { main { grid-template-columns: 1fr; } }
 
-  /* PANELS */
+  /* ── PANELS ── */
   .panel {
     background: var(--bg2);
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
-    border: 1px solid #1a1022;
-  }
-  .panel.carl { box-shadow: 0 0 40px rgba(255,107,26,0.06); border-color: rgba(255,107,26,0.2); }
-  .panel.donut { box-shadow: 0 0 40px rgba(155,89,182,0.06); border-color: rgba(155,89,182,0.2); }
-
-  .panel-header {
-    padding: 1rem 1.25rem 0.75rem;
-    border-bottom: 1px solid var(--border);
     position: relative;
+  }
+  .panel.carl {
+    border: 1px solid rgba(255,107,26,0.25);
+    box-shadow:
+      0 0 0 1px rgba(255,107,26,0.05),
+      0 8px 32px rgba(0,0,0,0.5),
+      0 0 60px rgba(255,107,26,0.05);
+  }
+  .panel.donut {
+    border: 1px solid rgba(168,85,212,0.25);
+    box-shadow:
+      0 0 0 1px rgba(168,85,212,0.05),
+      0 8px 32px rgba(0,0,0,0.5),
+      0 0 60px rgba(168,85,212,0.05);
+  }
+
+  /* top accent bar */
+  .panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    z-index: 1;
+  }
+  .carl::before { background: linear-gradient(90deg, rgba(255,107,26,0) 0%, var(--carl) 40%, var(--carl2) 60%, rgba(255,107,26,0) 100%); }
+  .donut::before { background: linear-gradient(90deg, rgba(168,85,212,0) 0%, var(--donut) 40%, var(--donut2) 60%, rgba(168,85,212,0) 100%); }
+
+  /* ── PANEL HEADER ── */
+  .panel-header {
+    padding: 1.1rem 1.25rem 0.9rem;
+    position: relative;
+    background: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 100%);
   }
   .panel-header::after {
     content: '';
     position: absolute;
     bottom: 0; left: 0; right: 0;
-    height: 2px;
+    height: 1px;
+    background: var(--border);
   }
-  .carl .panel-header::after { background: linear-gradient(90deg, transparent, var(--carl), transparent); }
-  .donut .panel-header::after { background: linear-gradient(90deg, transparent, var(--donut), transparent); }
 
   .char-name {
     font-family: 'Nunito', sans-serif;
     font-weight: 900;
-    font-size: 2rem;
-    letter-spacing: -0.01em;
+    font-size: 1.9rem;
+    letter-spacing: -0.02em;
     line-height: 1;
   }
-  .carl .char-name { color: var(--carl); text-shadow: 0 0 20px var(--carl-glow); }
-  .donut .char-name { color: var(--donut); text-shadow: 0 0 20px var(--donut-glow); }
+  .carl .char-name {
+    color: var(--carl);
+    text-shadow: 0 0 20px rgba(255,107,26,0.6), 0 0 50px rgba(255,107,26,0.2);
+  }
+  .donut .char-name {
+    color: var(--donut);
+    text-shadow: 0 0 20px rgba(168,85,212,0.6), 0 0 50px rgba(168,85,212,0.2);
+  }
 
   .char-meta {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.4rem;
     align-items: center;
-    margin-top: 0.3rem;
+    margin-top: 0.35rem;
     flex-wrap: wrap;
   }
   .badge {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 700;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    padding: 0.15rem 0.5rem;
-    border-radius: 3px;
+    padding: 0.18rem 0.55rem;
+    border-radius: 20px;
   }
-  .carl .badge { background: rgba(255,107,26,0.15); color: var(--carl2); border: 1px solid rgba(255,107,26,0.25); }
-  .donut .badge { background: rgba(155,89,182,0.15); color: var(--donut2); border: 1px solid rgba(155,89,182,0.25); }
-  .badge.neutral { background: rgba(255,255,255,0.05); color: var(--dim); border: 1px solid var(--border); }
+  .carl .badge { background: rgba(255,107,26,0.12); color: var(--carl2); border: 1px solid rgba(255,107,26,0.2); }
+  .donut .badge { background: rgba(168,85,212,0.12); color: var(--donut2); border: 1px solid rgba(168,85,212,0.2); }
 
-  /* TABS */
+  /* ── TABS ── */
   .tabs {
     display: flex;
-    border-bottom: 1px solid var(--border);
     background: var(--bg3);
+    border-bottom: 1px solid var(--border);
     overflow-x: auto;
     scrollbar-width: none;
   }
   .tabs::-webkit-scrollbar { display: none; }
   .tab {
-    padding: 0.5rem 0.9rem;
-    font-size: 0.7rem;
+    padding: 0.55rem 1rem;
+    font-size: 0.62rem;
     font-weight: 700;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--dim);
     cursor: pointer;
     border-bottom: 2px solid transparent;
     white-space: nowrap;
-    transition: color 0.2s, border-color 0.2s;
+    transition: color 0.15s, border-color 0.15s;
     flex-shrink: 0;
+    user-select: none;
   }
-  .tab:hover { color: var(--text); }
+  .tab:hover { color: var(--text2); }
   .carl .tab.active { color: var(--carl); border-color: var(--carl); }
   .donut .tab.active { color: var(--donut); border-color: var(--donut); }
 
-  .tab-content { display: none; padding: 1rem 1.25rem; }
+  .tab-content { display: none; padding: 1rem 1.25rem 1.25rem; }
   .tab-content.active { display: block; }
 
-  /* STATS TAB */
-  .chart-wrap { height: 200px; margin-bottom: 1rem; }
-  .stat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.4rem; margin-bottom: 0.75rem; }
+  /* ── STATS TAB ── */
+  .chart-wrap { height: 210px; margin-bottom: 1rem; }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.45rem;
+    margin-bottom: 0.85rem;
+  }
   .stat-pill {
     background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 0.35rem 0.2rem;
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 0.5rem 0.25rem 0.4rem;
     text-align: center;
-    transition: border-color 0.25s, background 0.25s;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
   }
-  .stat-pill.up { border-color: var(--gold); background: rgba(255,215,0,0.07); }
-  .stat-pill.down { border-color: #c0392b; background: rgba(192,57,43,0.07); }
-  .stat-pill .lbl { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; color: var(--dim); display: block; }
-  .stat-pill .val { font-family: 'Share Tech Mono', monospace; font-size: 1rem; }
+  .stat-pill.up {
+    border-color: var(--gold);
+    background: rgba(255,215,0,0.06);
+    box-shadow: 0 0 12px rgba(255,215,0,0.1);
+  }
+  .stat-pill.down {
+    border-color: #c0392b;
+    background: rgba(192,57,43,0.06);
+  }
+  .stat-pill .lbl {
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--dim);
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+  .stat-pill .val {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.15rem;
+    line-height: 1;
+    display: block;
+  }
   .stat-pill.up .val { color: var(--gold); }
   .stat-pill.down .val { color: #e74c3c; }
-  .stat-pill .val2 { font-size: 0.58rem; color: var(--carl2); display: block; }
+  .stat-pill .val2 { font-size: 0.6rem; color: var(--carl2); display: block; margin-top: 0.1rem; }
 
   .event-tag {
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    color: var(--dim);
-    background: var(--bg3);
-    border-left: 2px solid var(--dim);
-    padding: 0.5rem 0.75rem;
-    border-radius: 0 4px 4px 0;
-    line-height: 1.4;
-    min-height: 2.5rem;
+    line-height: 1.5;
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+    border-left: 3px solid;
+    min-height: 2.8rem;
   }
-  .carl .event-tag { border-color: var(--carl); color: var(--carl2); }
-  .donut .event-tag { border-color: var(--donut); color: var(--donut2); }
+  .carl .event-tag {
+    border-color: var(--carl);
+    background: rgba(255,107,26,0.07);
+    color: rgba(255,179,71,0.9);
+  }
+  .donut .event-tag {
+    border-color: var(--donut);
+    background: rgba(168,85,212,0.07);
+    color: rgba(255,215,0,0.85);
+  }
 
-  /* SKILLS / GEAR TABLES */
+  /* ── SKILL / GEAR TABLES ── */
   .data-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.78rem;
+    font-size: 0.79rem;
   }
   .data-table th {
-    font-size: 0.62rem;
+    font-size: 0.58rem;
     font-weight: 700;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--dim);
-    padding: 0.4rem 0.5rem;
-    border-bottom: 1px solid var(--border);
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid var(--border2);
     text-align: left;
+    background: var(--bg3);
   }
   .data-table td {
-    padding: 0.35rem 0.5rem;
-    border-bottom: 1px solid rgba(255,255,255,0.03);
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid rgba(255,255,255,0.025);
     vertical-align: top;
-    line-height: 1.35;
+    line-height: 1.4;
   }
-  .data-table tr:hover td { background: rgba(255,255,255,0.02); }
-  .data-table .skill-name { font-weight: 600; color: var(--text); }
-  .data-table .skill-lvl { font-family: 'Share Tech Mono', monospace; color: var(--carl2); }
+  .data-table tbody tr:hover td { background: rgba(255,255,255,0.025); }
+  .data-table .skill-name { font-weight: 700; color: var(--text); }
+  .data-table .skill-lvl { font-family: 'Share Tech Mono', monospace; font-size: 0.82rem; }
+  .carl .data-table .skill-lvl { color: var(--carl2); }
   .donut .data-table .skill-lvl { color: var(--donut2); }
-  .data-table .skill-note { color: var(--dim); font-size: 0.72rem; }
+  .data-table .skill-note { color: var(--text2); font-size: 0.7rem; }
+
   .section-title {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 700;
     letter-spacing: 0.3em;
     text-transform: uppercase;
     color: var(--dim);
-    margin: 0.75rem 0 0.4rem;
-    padding-bottom: 0.3rem;
-    border-bottom: 1px solid var(--border);
+    margin: 1rem 0 0.5rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border2);
   }
   .section-title:first-child { margin-top: 0; }
 
-  .gear-slot { color: var(--dim); font-size: 0.7rem; }
-  .gear-item { font-weight: 600; }
+  .gear-slot {
+    color: var(--dim);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    width: 90px;
+  }
+  .gear-item { font-weight: 600; color: var(--text); font-size: 0.78rem; }
+
+  .passives-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .passives-list li {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text2);
+    padding: 0.4rem 0.75rem;
+    background: var(--bg3);
+    border-radius: 6px;
+    border-left: 2px solid var(--border2);
+    line-height: 1.4;
+  }
+  .carl .passives-list li { border-color: rgba(255,107,26,0.3); }
+  .donut .passives-list li { border-color: rgba(168,85,212,0.3); }
 
   .empty-note {
     color: var(--dim);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-style: italic;
     padding: 0.5rem 0;
   }
 
-  /* TIMELINE */
+  /* ── TIMELINE ── */
   .timeline-section {
     max-width: 1300px;
-    margin: 0 auto 2rem;
+    margin: 0 auto 2.5rem;
     padding: 0 1.25rem;
   }
+  .tl-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.85rem;
+  }
   .tl-label {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 700;
     letter-spacing: 0.35em;
     text-transform: uppercase;
     color: var(--dim);
-    text-align: center;
-    margin-bottom: 0.75rem;
   }
+  .tl-line { flex: 1; height: 1px; background: var(--border); }
+
   .tl-wrap {
     background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1.25rem 1.5rem 1rem;
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem 1.1rem;
   }
   .tl-slider-row {
     position: relative;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.75rem;
   }
   .tl-track {
-    height: 3px;
-    background: var(--border);
+    height: 4px;
+    background: var(--bg4);
     border-radius: 2px;
     position: relative;
   }
   .tl-fill {
     position: absolute;
     left: 0; top: 0; bottom: 0;
-    background: linear-gradient(90deg, var(--carl), var(--donut));
+    background: linear-gradient(90deg, var(--carl), #c060e0, var(--donut));
     border-radius: 2px;
     transition: width 0.1s;
   }
   input[type=range] {
     position: absolute;
     width: 100%;
-    top: -6px;
+    top: -8px;
     left: 0;
-    height: 16px;
+    height: 20px;
     -webkit-appearance: none;
     appearance: none;
     background: transparent;
@@ -356,43 +510,69 @@
   }
   input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 16px; height: 16px;
+    width: 18px; height: 18px;
     border-radius: 50%;
     background: var(--text);
     border: 2px solid var(--carl);
-    box-shadow: 0 0 8px var(--carl-glow);
+    box-shadow: 0 0 10px var(--carl-glow), 0 0 20px rgba(255,107,26,0.2);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--text);
+    border: 2px solid var(--carl);
+    cursor: pointer;
   }
   .tl-ticks {
     display: flex;
     justify-content: space-between;
-    padding-top: 0.25rem;
   }
   .tick {
     display: flex;
     flex-direction: column;
     align-items: center;
     cursor: pointer;
-    opacity: 0.4;
+    opacity: 0.35;
     transition: opacity 0.15s;
     flex: 1;
     min-width: 0;
   }
-  .tick:hover, .tick.active { opacity: 1; }
-  .tick-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--dim); margin-bottom: 0.2rem; transition: background 0.15s, transform 0.15s; }
-  .tick.active .tick-dot { background: var(--gold); transform: scale(1.6); box-shadow: 0 0 5px var(--gold); }
-  .tick-pg { font-size: 0.52rem; font-family: 'Share Tech Mono', monospace; color: var(--dim); }
+  .tick:hover { opacity: 0.75; }
+  .tick.active { opacity: 1; }
+  .tick-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--dim);
+    margin-bottom: 0.25rem;
+    transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+  }
+  .tick.active .tick-dot {
+    background: var(--gold);
+    transform: scale(1.8);
+    box-shadow: 0 0 8px var(--gold);
+  }
+  .tick-pg {
+    font-size: 0.5rem;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--dim);
+    white-space: nowrap;
+    overflow: hidden;
+  }
   .tick.active .tick-pg { color: var(--gold); }
 
-  /* FOOTER */
+  /* ── FOOTER ── */
   footer {
     text-align: center;
-    padding: 1rem;
-    font-size: 0.68rem;
+    padding: 1.25rem 1rem;
+    font-size: 0.65rem;
     color: var(--dim);
     border-top: 1px solid var(--border);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
+    background: linear-gradient(180deg, transparent, rgba(168,85,212,0.03));
   }
-  footer a { color: var(--dim); }
+  footer a { color: var(--dim); text-decoration: none; }
+  footer a:hover { color: var(--text2); }
 
   .scroll-x { overflow-x: auto; }
 </style>
@@ -400,25 +580,28 @@
 <body>
 
 <header>
+  <div class="title-eyebrow">Crawler #4122 &nbsp;·&nbsp; The Dungeon Anarchist's Cookbook</div>
   <div class="title">Dungeon Crawler Carl</div>
   <div class="subtitle">Character &nbsp;·&nbsp; Stat &nbsp;·&nbsp; Skill &nbsp;·&nbsp; Inventory Tracker</div>
-  <div class="title-line"></div>
 </header>
 
 <!-- LOOKUP BAR -->
-<div class="lookup-bar">
-  <label>Book</label>
-  <select id="sel-book">
-    <option value="1">Book 1</option>
-    <option value="2">Book 2</option>
-    <option value="3">Book 3</option>
-  </select>
-  <label>Page</label>
-  <input type="number" id="inp-page" min="1" max="600" value="36" placeholder="36">
-  <button class="lookup-btn" onclick="lookupPage()">GO</button>
-  <label style="margin-left:0.5rem">or use timeline ▼</label>
+<div class="lookup-wrap">
+  <div class="lookup-bar">
+    <label>Book</label>
+    <select id="sel-book">
+      <option value="1">Book 1</option>
+      <option value="2">Book 2</option>
+      <option value="3">Book 3</option>
+    </select>
+    <div class="lookup-divider"></div>
+    <label>Page</label>
+    <input type="number" id="inp-page" min="1" max="600" value="36" placeholder="36">
+    <button class="lookup-btn" onclick="lookupPage()">GO</button>
+    <div class="lookup-divider"></div>
+    <span class="lookup-info" id="lookup-info">Book 1, Page 36 — Starting stats</span>
+  </div>
 </div>
-<div class="lookup-info" id="lookup-info">Showing Book 1, Page 36 — Carl & Donut starting stats</div>
 
 <main>
   <!-- CARL -->
@@ -432,8 +615,8 @@
     </div>
     <div class="tabs" id="carl-tabs">
       <div class="tab active" onclick="switchTab('carl','stats',this)">Stats</div>
-      <div class="tab" onclick="switchTab('carl','combat',this)">Combat Skills</div>
-      <div class="tab" onclick="switchTab('carl','dungeon',this)">Dungeon Skills</div>
+      <div class="tab" onclick="switchTab('carl','combat',this)">Combat</div>
+      <div class="tab" onclick="switchTab('carl','dungeon',this)">Dungeon</div>
       <div class="tab" onclick="switchTab('carl','explosives',this)">Explosives</div>
       <div class="tab" onclick="switchTab('carl','spells',this)">Spells</div>
       <div class="tab" onclick="switchTab('carl','gear',this)">Gear</div>
@@ -444,24 +627,12 @@
       <div class="stat-grid" id="carl-stat-pills"></div>
       <div class="event-tag" id="carl-event"></div>
     </div>
-    <div class="tab-content" id="carl-tab-combat">
-      <div class="scroll-x"><table class="data-table" id="carl-combat-table"></table></div>
-    </div>
-    <div class="tab-content" id="carl-tab-dungeon">
-      <div class="scroll-x"><table class="data-table" id="carl-dungeon-table"></table></div>
-    </div>
-    <div class="tab-content" id="carl-tab-explosives">
-      <div class="scroll-x"><table class="data-table" id="carl-explosives-table"></table></div>
-    </div>
-    <div class="tab-content" id="carl-tab-spells">
-      <div class="scroll-x"><table class="data-table" id="carl-spells-table"></table></div>
-    </div>
-    <div class="tab-content" id="carl-tab-gear">
-      <div id="carl-gear-content"></div>
-    </div>
-    <div class="tab-content" id="carl-tab-buffs">
-      <div id="carl-buffs-content"></div>
-    </div>
+    <div class="tab-content" id="carl-tab-combat"></div>
+    <div class="tab-content" id="carl-tab-dungeon"></div>
+    <div class="tab-content" id="carl-tab-explosives"></div>
+    <div class="tab-content" id="carl-tab-spells"></div>
+    <div class="tab-content" id="carl-tab-gear"></div>
+    <div class="tab-content" id="carl-tab-buffs"></div>
   </div>
 
   <!-- DONUT -->
@@ -475,7 +646,7 @@
     </div>
     <div class="tabs" id="donut-tabs">
       <div class="tab active" onclick="switchTab('donut','stats',this)">Stats</div>
-      <div class="tab" onclick="switchTab('donut','combat',this)">Combat Skills</div>
+      <div class="tab" onclick="switchTab('donut','combat',this)">Combat</div>
       <div class="tab" onclick="switchTab('donut','spells',this)">Spells</div>
       <div class="tab" onclick="switchTab('donut','gear',this)">Gear</div>
       <div class="tab" onclick="switchTab('donut','buffs',this)">Passives</div>
@@ -485,24 +656,20 @@
       <div class="stat-grid" id="donut-stat-pills"></div>
       <div class="event-tag" id="donut-event"></div>
     </div>
-    <div class="tab-content" id="donut-tab-combat">
-      <div class="scroll-x"><table class="data-table" id="donut-combat-table"></table></div>
-    </div>
-    <div class="tab-content" id="donut-tab-spells">
-      <div class="scroll-x"><table class="data-table" id="donut-spells-table"></table></div>
-    </div>
-    <div class="tab-content" id="donut-tab-gear">
-      <div id="donut-gear-content"></div>
-    </div>
-    <div class="tab-content" id="donut-tab-buffs">
-      <div id="donut-buffs-content"></div>
-    </div>
+    <div class="tab-content" id="donut-tab-combat"></div>
+    <div class="tab-content" id="donut-tab-spells"></div>
+    <div class="tab-content" id="donut-tab-gear"></div>
+    <div class="tab-content" id="donut-tab-buffs"></div>
   </div>
 </main>
 
 <!-- TIMELINE -->
 <div class="timeline-section">
-  <div class="tl-label">▶ Timeline — Scrub through stat changes</div>
+  <div class="tl-header">
+    <div class="tl-label">Timeline</div>
+    <div class="tl-line"></div>
+    <div class="tl-label">Scrub through stat changes</div>
+  </div>
   <div class="tl-wrap">
     <div class="tl-slider-row">
       <div class="tl-track"><div class="tl-fill" id="tl-fill"></div></div>
@@ -514,9 +681,806 @@
 
 <footer>
   Data sourced from <a href="https://dungeon-crawler-carl.fandom.com" target="_blank">dungeon-crawler-carl.fandom.com</a>
-  &nbsp;·&nbsp; Floors 1–3 verified &nbsp;·&nbsp; ✦ = with item equipped &nbsp;·&nbsp; Stats shown are base values
+  &nbsp;·&nbsp; Books 1–2 verified &nbsp;·&nbsp; ✦ = with item equipped &nbsp;·&nbsp; Stats shown are base values
 </footer>
 
+const CARL_SNAPSHOTS = [
+  // ── BOOK 1, FLOOR 1 ──────────────────────────────────────────────
+  // Stats: base values only. str2 = STR with War Gauntlet equipped (fist mode).
+  // All skill levels from fandom wiki Carl/Floor_1 and Carl/Floor_2 pages.
+  {
+    page:36, book:1, level:1, cls:'Human', str:6, int:3, con:5, dex:5, chr:4, str2:null,
+    event:'Starting stats — Coast Guard vet, survived the Transformation in boxers and pink crocs',
+    combatSkills:[
+      {name:'Bare Knuckle Skill',     lvl:'—',  note:'gains during floor; ends at 6'},
+      {name:'Foot Soldier Skill',     lvl:3,    note:'+3 bonus on reaching Level 3'},
+      {name:'Iron Punch Skill',       lvl:3,    note:''},
+      {name:'Jump Attack',            lvl:1,    note:'gained after Hoarder battle'},
+      {name:'Powerful Strike Skill',  lvl:3,    note:'Toe Ring adds +3 bonus when equipped'},
+      {name:'Pugilism Skill',         lvl:3,    note:'notification at lvl 4 early on'},
+      {name:'Smush Skill',            lvl:3,    note:'+3 bonus on reaching Level 3'},
+      {name:'Unarmed Combat Skill',   lvl:3,    note:''},
+    ],
+    dungeonSkills:[
+      {name:'Regeneration Skill',     lvl:7,    note:'Bonus from Trollskin Shirt of Pummeling'},
+    ],
+    explosiveSkills:[
+      {name:'Dangerous Explosives Handling', lvl:1, note:''},
+      {name:'Explosives Handling',           lvl:1, note:''},
+      {name:'Goblin Explosives Skill',       lvl:1, note:''},
+      {name:'IED Skill',                     lvl:3, note:'Used to blow up Goblin War Chieftain'},
+    ],
+    spells:[],
+    otherSkills:[
+      {name:'Chopper Pilot Skill', lvl:1, note:'For the Goblin Copper Chopper'},
+    ],
+    vehicleSkills:[],
+    gear:[
+      {slot:'Jacket',  item:'Brown Leather Coat (Beatrice\'s)'},
+      {slot:'Legs',    item:'Heart Boxers (Beatrice\'s, unenchanted)'},
+      {slot:'Feet',    item:'Pink Croc Sandals (Beatrice\'s, ill-fitting)'},
+    ],
+    passives:[],
+  },
+  {
+    page:56, book:1, level:2, cls:'Human', str:6, int:3, con:9, dex:5, chr:4, str2:null,
+    event:'Enchanted Nightgaunt Cloak of Stoutness (+4 CON) + Enchanted Trollskin Shirt of Pummeling + Toe Ring of the Splatter Skunk (+3 STR bonus) — all equipped within first hour',
+    combatSkills:[
+      {name:'Bare Knuckle Skill',     lvl:1,    note:''},
+      {name:'Foot Soldier Skill',     lvl:3,    note:''},
+      {name:'Iron Punch Skill',       lvl:3,    note:''},
+      {name:'Jump Attack',            lvl:1,    note:''},
+      {name:'Powerful Strike Skill',  lvl:'3 (6✦)', note:'Toe Ring of the Splatter Skunk +3 bonus'},
+      {name:'Pugilism Skill',         lvl:4,    note:'reaches lvl 4 notification on entry'},
+      {name:'Smush Skill',            lvl:3,    note:''},
+      {name:'Unarmed Combat Skill',   lvl:3,    note:''},
+    ],
+    dungeonSkills:[
+      {name:'Regeneration Skill', lvl:7, note:'Trollskin Shirt of Pummeling (always active)'},
+    ],
+    explosiveSkills:[
+      {name:'Dangerous Explosives Handling', lvl:1, note:''},
+      {name:'Explosives Handling',           lvl:1, note:''},
+      {name:'Goblin Explosives Skill',       lvl:1, note:''},
+      {name:'IED Skill',                     lvl:3, note:''},
+    ],
+    spells:[],
+    otherSkills:[{name:'Chopper Pilot Skill', lvl:1, note:''}],
+    vehicleSkills:[],
+    gear:[
+      {slot:'Neck',         item:'Enchanted Nightgaunt Cloak of Stoutness (+4 CON, Anti-Piercing, Ice Resist, Poison Resist) — attached to coat'},
+      {slot:'Undershirt',   item:'Enchanted Trollskin Shirt of Pummeling (Regen Skill +7, negates melee damage debuffs)'},
+      {slot:'Jacket',       item:'Brown Leather Coat'},
+      {slot:'Legs',         item:'Heart Boxers (unenchanted)'},
+      {slot:'Feet',         item:'Enchanted Toe Ring of the Splatter Skunk (right index toe) — +3 STR bonus'},
+      {slot:'Tattoo',       item:'Goblin Pass Tattoo (left inner forearm)'},
+    ],
+    passives:[
+      'Nightgaunt Cloak — Anti-Piercing Resistance on all equipped armor',
+      'Nightgaunt Cloak — Resistant to Ice attacks',
+      'Nightgaunt Cloak — Resistant to Poison attacks',
+      'Trollskin Shirt — Regeneration Skill +7 (always active)',
+      'Trollskin Shirt — Negates melee-based Damage Debuffs',
+      'Goblin Pass Tattoo — Goblins white-tagged (free passage in goblin territory)',
+      'Goblin Pass Tattoo — Goblin enemies deal +20% damage to Carl (weakness)',
+    ],
+  },
+  {
+    page:83, book:1, level:3, cls:'Human', str:9, int:3, con:10, dex:5, chr:4, str2:null,
+    event:'Silver Ring of +1 CON. Level 3 reached — Foot Soldier & Smush get +3. Hoarder fought. Spiked Kneepads gained. Desperado Pass Tattoo. Chopper Pilot reaches 5.',
+    combatSkills:[
+      {name:'Bare Knuckle Skill',     lvl:1,    note:''},
+      {name:'Foot Soldier Skill',     lvl:6,    note:'+3 awarded at Level 3 milestone'},
+      {name:'Iron Punch Skill',       lvl:3,    note:''},
+      {name:'Jump Attack',            lvl:2,    note:'notification gained after Hoarder battle'},
+      {name:'Powerful Strike Skill',  lvl:'3 (6✦)', note:'Toe Ring +3 bonus'},
+      {name:'Pugilism Skill',         lvl:6,    note:''},
+      {name:'Smush Skill',            lvl:6,    note:'+3 awarded at Level 3 milestone'},
+      {name:'Unarmed Combat Skill',   lvl:3,    note:''},
+    ],
+    dungeonSkills:[
+      {name:'Regeneration Skill', lvl:7, note:'Trollskin Shirt'},
+    ],
+    explosiveSkills:[
+      {name:'Dangerous Explosives Handling', lvl:1, note:''},
+      {name:'Explosives Handling',           lvl:1, note:''},
+      {name:'Goblin Explosives Skill',       lvl:1, note:''},
+      {name:'IED Skill',                     lvl:3, note:''},
+    ],
+    spells:[],
+    otherSkills:[{name:'Chopper Pilot Skill', lvl:5, note:'wiki: ends Floor 1 at 5'}],
+    vehicleSkills:[],
+    gear:[
+      {slot:'Neck',         item:'Nightgaunt Cloak of Stoutness'},
+      {slot:'Undershirt',   item:'Trollskin Shirt of Pummeling'},
+      {slot:'Jacket',       item:'Leather Coat (missing right arm after Slime punch)'},
+      {slot:'Legs',         item:'Heart Boxers (unenchanted)'},
+      {slot:'Knees',        item:'Enchanted Spiked Kneepads of the Shade Gnoll Riot Forces (10% Damage Reflect, blocks momentum attacks)'},
+      {slot:'Feet',         item:'Toe Ring of the Splatter Skunk'},
+      {slot:'Hands',        item:'Silver Ring of +1 CON (unspecified finger)'},
+      {slot:'Tattoo (neck)',item:'Desperado Pass Tattoo — Desperado Club access'},
+      {slot:'Tattoo (arm)', item:'Goblin Pass Tattoo (left inner forearm)'},
+    ],
+    passives:[
+      'Spiked Kneepads — 10% Damage Reflect on all equipped armor',
+      'Spiked Kneepads — Blocks momentum-based attacks',
+      'Nightgaunt Cloak — Anti-Piercing Resistance, Ice Resist, Poison Resist',
+      'Trollskin Shirt — Regen +7, negates melee damage debuffs',
+      'Goblin Pass — Goblins white-tagged; +20% damage taken from goblins',
+      'Desperado Club — membership access (Desperado Pass Tattoo on neck)',
+    ],
+  },
+  {
+    page:146, book:1, level:7, cls:'Human', str:9, int:3, con:12, dex:5, chr:4, str2:null,
+    event:'Silver Ring of +2 CON (left ring finger). Levels 5, 7 reached. Determine Value Skill from Skill Potion.',
+    combatSkills:[
+      {name:'Bare Knuckle Skill',     lvl:6,    note:'wiki: ends Floor 1 at 6'},
+      {name:'Foot Soldier Skill',     lvl:6,    note:''},
+      {name:'Iron Punch Skill',       lvl:3,    note:''},
+      {name:'Jump Attack',            lvl:2,    note:''},
+      {name:'Powerful Strike Skill',  lvl:'5 (8✦)', note:'wiki: ends Floor 1 at 5 base; Toe Ring +3 bonus'},
+      {name:'Pugilism Skill',         lvl:6,    note:'wiki: ends Floor 1 at 6'},
+      {name:'Smush Skill',            lvl:6,    note:''},
+      {name:'Unarmed Combat Skill',   lvl:6,    note:'wiki: ends Floor 1 at 6'},
+    ],
+    dungeonSkills:[
+      {name:'Determine Value Skill',  lvl:1,    note:'From Skill Potion'},
+      {name:'Regeneration Skill',     lvl:7,    note:'Trollskin Shirt'},
+    ],
+    explosiveSkills:[
+      {name:'Dangerous Explosives Handling', lvl:5, note:'wiki: ends Floor 1 at 5'},
+      {name:'Explosives Handling',           lvl:5, note:'wiki: ends Floor 1 at 5'},
+      {name:'Goblin Explosives Skill',       lvl:5, note:'wiki: ends Floor 1 at 5'},
+      {name:'IED Skill',                     lvl:3, note:'wiki: no final level noted for Floor 1'},
+    ],
+    spells:[],
+    otherSkills:[
+      {name:'Chopper Pilot Skill', lvl:5, note:''},
+      {name:'Slingshot Skill',     lvl:1, note:''},
+    ],
+    vehicleSkills:[],
+    gear:[
+      {slot:'Neck',         item:'Nightgaunt Cloak of Stoutness'},
+      {slot:'Undershirt',   item:'Trollskin Shirt of Pummeling'},
+      {slot:'Jacket',       item:'Leather Coat (missing right arm)'},
+      {slot:'Legs',         item:'Heart Boxers (unenchanted)'},
+      {slot:'Knees',        item:'Spiked Kneepads of the Shade Gnoll Riot Forces'},
+      {slot:'Feet',         item:'Toe Ring of the Splatter Skunk'},
+      {slot:'Hands',        item:'Silver Ring of +1 CON + Silver Ring of +2 CON (left ring finger)'},
+      {slot:'Tattoos',      item:'Desperado Pass (neck) + Goblin Pass (left forearm)'},
+    ],
+    passives:[
+      'Spiked Kneepads — 10% Damage Reflect, blocks momentum attacks',
+      'Nightgaunt Cloak — Anti-Piercing, Ice Resist, Poison Resist',
+      'Trollskin Shirt — Regen +7, negates melee damage debuffs',
+      'Goblin Pass — Goblins white-tagged; +20% damage taken from goblins',
+      'Desperado Club — membership access',
+    ],
+  },
+  {
+    page:199, book:1, level:9, cls:'Human', str:9, int:3, con:12, dex:6, chr:4, str2:12,
+    event:'Enchanted War Gauntlet of the Exalted Grull (right wrist) — +1 DEX, +3 STR fist mode only (✦), Iron Punch +2✦, 2% stun on hit. Level 9.',
+    combatSkills:[
+      {name:'Bare Knuckle Skill',     lvl:6,    note:''},
+      {name:'Foot Soldier Skill',     lvl:6,    note:''},
+      {name:'Iron Punch Skill',       lvl:'5 (7✦)', note:'Gauntlet adds +2 when equipped'},
+      {name:'Jump Attack',            lvl:2,    note:''},
+      {name:'Powerful Strike Skill',  lvl:'5 (9✦)', note:'Toe Ring +3, Gauntlet +1'},
+      {name:'Pugilism Skill',         lvl:6,    note:''},
+      {name:'Smush Skill',            lvl:6,    note:''},
+      {name:'Unarmed Combat Skill',   lvl:6,    note:''},
+    ],
+    dungeonSkills:[
+      {name:'Determine Value Skill',  lvl:2,    note:''},
+      {name:'Regeneration Skill',     lvl:7,    note:'Trollskin Shirt'},
+    ],
+    explosiveSkills:[
+      {name:'Dangerous Explosives Handling', lvl:5, note:''},
+      {name:'Explosives Handling',           lvl:5, note:''},
+      {name:'Goblin Explosives Skill',       lvl:5, note:''},
+      {name:'IED Skill',                     lvl:3, note:''},
+    ],
+    spells:[],
+    otherSkills:[
+      {name:'Chopper Pilot Skill', lvl:5,  note:''},
+      {name:'Slingshot Skill',     lvl:3,  note:''},
+    ],
+    vehicleSkills:[],
+    gear:[
+      {slot:'Neck',       item:'Nightgaunt Cloak of Stoutness'},
+      {slot:'Undershirt', item:'Trollskin Shirt of Pummeling'},
+      {slot:'Jacket',     item:'Leather Coat (missing right arm)'},
+      {slot:'Wrists (R)', item:'Enchanted War Gauntlet of the Exalted Grull — +1 DEX, +3 STR✦ (fist mode only), Iron Punch +2✦, 2% stun chance'},
+      {slot:'Legs',       item:'Heart Boxers (unenchanted)'},
+      {slot:'Knees',      item:'Spiked Kneepads of the Shade Gnoll Riot Forces'},
+      {slot:'Feet',       item:'Toe Ring of the Splatter Skunk'},
+      {slot:'Hands',      item:'Silver Ring of +1 CON + Silver Ring of +2 CON'},
+      {slot:'Tattoos',    item:'Desperado Pass (neck) + Goblin Pass (left forearm)'},
+    ],
+    passives:[
+      'Gauntlet — 2% chance to stun target when struck',
+      'Spiked Kneepads — 10% Damage Reflect, blocks momentum attacks',
+      'Nightgaunt Cloak — Anti-Piercing, Ice Resist, Poison Resist',
+      'Trollskin Shirt — Regen +7, negates melee damage debuffs',
+      'Goblin Pass — Goblins white-tagged; +20% damage taken from goblins',
+      'Desperado Club — membership access',
+    ],
+  },
+  // ── BOOK 1, FLOOR 2 (start) ──────────────────────────────────────
+  {
+    page:307, book:1, level:11, cls:'Human', str:9, int:3, con:14, dex:6, chr:4, str2:12,
+    event:'Floor 2 — Enchanted Big Boi Boxers (+2 CON, grants Protective Shell Spell Lvl 15). Enchanted Pedicure Kit of the Sylph (Smush +3✦, barefoot buffs). Level 10-11.',
+    combatSkills:[
+      {name:'Bare Knuckle Skill',     lvl:6,    note:''},
+      {name:'Foot Soldier Skill',     lvl:6,    note:''},
+      {name:'Iron Punch Skill',       lvl:'5 (7✦)', note:'Gauntlet +2'},
+      {name:'Jump Attack',            lvl:2,    note:''},
+      {name:'Powerful Strike Skill',  lvl:'5 (9✦)', note:'Toe Ring +3, Gauntlet +1'},
+      {name:'Pugilism Skill',         lvl:7,    note:'progressing on Floor 2 (wiki: ends Floor 2 at 10)'},
+      {name:'Smush Skill',            lvl:'6 (9✦)', note:'Pedicure Kit adds +3 when barefoot'},
+      {name:'Unarmed Combat Skill',   lvl:6,    note:''},
+    ],
+    dungeonSkills:[
+      {name:'Aiming Skill',           lvl:4,    note:'Floor 2'},
+      {name:'Determine Value Skill',  lvl:2,    note:''},
+      {name:'Regeneration Skill',     lvl:7,    note:'Trollskin Shirt'},
+      {name:'Steady Hand Skill',      lvl:1,    note:'Floor 2'},
+    ],
+    explosiveSkills:[
+      {name:'Dangerous Explosives Handling', lvl:7,  note:'Floor 2 upgrade (wiki: floor 2 final = 7)'},
+      {name:'Explosives Handling',           lvl:7,  note:'Floor 2 upgrade'},
+      {name:'Goblin Explosives Skill',       lvl:5,  note:''},
+      {name:'IED Skill',                     lvl:7,  note:'Floor 2 upgrade'},
+      {name:'Incendiary Device Handling',    lvl:5,  note:"Floor 2 — from creating Carl's Jug O'Boom"},
+    ],
+    spells:[
+      {name:'Protective Shell', lvl:15, note:'Granted by Enchanted Big Boi Boxers. Radius: 3m + 0.5m per INT point'},
+    ],
+    otherSkills:[
+      {name:'Chopper Pilot Skill', lvl:5,  note:''},
+      {name:'Slingshot Skill',     lvl:3,  note:'wiki: Floor 2 final = 3'},
+    ],
+    vehicleSkills:[],
+    gear:[
+      {slot:'Neck',       item:'Nightgaunt Cloak of Stoutness'},
+      {slot:'Undershirt', item:'Trollskin Shirt of Pummeling'},
+      {slot:'Jacket',     item:'Leather Coat (missing right arm)'},
+      {slot:'Wrists (R)', item:'Enchanted War Gauntlet of the Exalted Grull'},
+      {slot:'Legs',       item:'Enchanted Big Boi Boxers (+2 CON, grants Protective Shell Spell Lvl 15)'},
+      {slot:'Knees',      item:'Spiked Kneepads of the Shade Gnoll Riot Forces'},
+      {slot:'Feet',       item:'Toe Ring of the Splatter Skunk'},
+      {slot:'Hands',      item:'Silver Ring of +1 CON + Silver Ring of +2 CON'},
+      {slot:'Other',      item:'Enchanted Pedicure Kit of the Sylph (Smush +3✦ barefoot, +15% barefoot damage, 30hr Unbreakable feet buff, 30hr Celestially Nimble buff)'},
+      {slot:'Tattoos',    item:'Desperado Pass (neck) + Goblin Pass (left forearm)'},
+    ],
+    passives:[
+      'Big Boi Boxers — Protective Shell Spell (radius: 3m + 0.5m per INT)',
+      'Pedicure Kit — +15% damage (barefoot), Smush +3✦ (barefoot)',
+      'Pedicure Kit buff (30hrs) — Unbreakable (feet only)',
+      'Pedicure Kit buff (30hrs) — Celestially Nimble & Tidy: traps triggered by footfalls alarm + 5s delay',
+      'Gauntlet — 2% stun on hit',
+      'Spiked Kneepads — 10% Damage Reflect, blocks momentum attacks',
+      'Nightgaunt Cloak — Anti-Piercing, Ice Resist, Poison Resist',
+      'Trollskin Shirt — Regen +7, negates melee damage debuffs',
+      'Goblin Pass — Goblins white-tagged; +20% damage taken from goblins',
+      'Desperado Club — membership access',
+    ],
+  },
+  // ── BOOK 2, FLOOR 3 (class selection) ────────────────────────────
+  {
+    page:368, book:1, level:13, cls:'Human', str:9, int:3, con:14, dex:6, chr:4, str2:12,
+    event:'End of Book 1 / Start of Floor 3. Crawler #4122. Level 13. Heading into Primal race + class selection.',
+    combatSkills:[
+      {name:'Bare Knuckle Skill',     lvl:6,    note:''},
+      {name:'Foot Soldier Skill',     lvl:6,    note:''},
+      {name:'Iron Punch Skill',       lvl:'5 (7✦)', note:'Gauntlet +2'},
+      {name:'Jump Attack',            lvl:2,    note:''},
+      {name:'Powerful Strike Skill',  lvl:'5 (9✦)', note:'Toe Ring +3, Gauntlet +1'},
+      {name:'Pugilism Skill',         lvl:10,   note:'wiki: ends Floor 2 at 10'},
+      {name:'Smush Skill',            lvl:'6 (9✦)', note:'Pedicure Kit +3'},
+      {name:'Unarmed Combat Skill',   lvl:6,    note:''},
+    ],
+    dungeonSkills:[
+      {name:'Aiming Skill',           lvl:4,    note:''},
+      {name:'Determine Value Skill',  lvl:2,    note:''},
+      {name:'Regeneration Skill',     lvl:7,    note:'Trollskin Shirt'},
+      {name:'Steady Hand Skill',      lvl:1,    note:''},
+    ],
+    explosiveSkills:[
+      {name:'Dangerous Explosives Handling', lvl:7,  note:''},
+      {name:'Explosives Handling',           lvl:7,  note:''},
+      {name:'Goblin Explosives Skill',       lvl:5,  note:''},
+      {name:'IED Skill',                     lvl:7,  note:''},
+      {name:'Incendiary Device Handling',    lvl:5,  note:''},
+    ],
+    spells:[{name:'Protective Shell', lvl:15, note:'Big Boi Boxers. Radius 3m + 0.5m/INT'}],
+    otherSkills:[
+      {name:'Chopper Pilot Skill', lvl:5, note:''},
+      {name:'Slingshot Skill',     lvl:3, note:''},
+    ],
+    vehicleSkills:[],
+    gear:[
+      {slot:'Neck',       item:'Nightgaunt Cloak of Stoutness'},
+      {slot:'Undershirt', item:'Trollskin Shirt of Pummeling'},
+      {slot:'Jacket',     item:'Leather Coat (missing right arm)'},
+      {slot:'Wrists (R)', item:'Enchanted War Gauntlet of the Exalted Grull'},
+      {slot:'Legs',       item:'Enchanted Big Boi Boxers'},
+      {slot:'Knees',      item:'Spiked Kneepads of the Shade Gnoll Riot Forces'},
+      {slot:'Feet',       item:'Toe Ring of the Splatter Skunk'},
+      {slot:'Hands',      item:'Silver Ring of +1 CON + Silver Ring of +2 CON'},
+      {slot:'Other',      item:'Enchanted Pedicure Kit of the Sylph'},
+      {slot:'Tattoos',    item:'Desperado Pass (neck) + Goblin Pass (left forearm)'},
+    ],
+    passives:[
+      'Big Boi Boxers — Protective Shell Spell (radius: 3m + 0.5m/INT)',
+      'Gauntlet — 2% stun on hit',
+      'Spiked Kneepads — 10% Damage Reflect, blocks momentum attacks',
+      'Nightgaunt Cloak — Anti-Piercing, Ice Resist, Poison Resist',
+      'Trollskin Shirt — Regen +7, negates melee damage debuffs',
+      'Goblin Pass — Goblins white-tagged; +20% damage taken from goblins',
+      'Desperado Club — membership access',
+    ],
+  },
+  // ── BOOK 2, FLOOR 3 — race + class selection ─────────────────────
+  {
+    page:400, book:2, level:13, cls:'Primal / Compensated Anarchist', str:13, int:5, con:19, dex:11, chr:25, str2:16,
+    event:'Book 2 — Primal race selected (−1 all stats pre-allocation), then Compensated Anarchist class (+1 INT, +5 CHR). Massive stat allocation. New class skills: Bomb Surgeon, Trap Engineer, Hide in Shadows, Find Trap, Backfire, Escape Plan.',
+    combatSkills:[
+      {name:'Bare Knuckle Skill',     lvl:6,    note:''},
+      {name:'Foot Soldier Skill',     lvl:6,    note:''},
+      {name:'Iron Punch Skill',       lvl:'5 (7✦)', note:'Gauntlet +2; wiki: ends Floor 3 at 10'},
+      {name:'Jump Attack',            lvl:2,    note:''},
+      {name:'Powerful Strike Skill',  lvl:'5 (9✦)', note:'Toe Ring +3, Gauntlet +1'},
+      {name:'Pugilism Skill',         lvl:10,   note:''},
+      {name:'Smush Skill',            lvl:'6 (9✦)', note:'Pedicure Kit +3'},
+      {name:'Unarmed Combat Skill',   lvl:4,    note:'Class upgrade to 4'},
+    ],
+    dungeonSkills:[
+      {name:'Aiming Skill',           lvl:4,    note:''},
+      {name:'Backfire',               lvl:5,    note:'Compensated Anarchist class skill 🆕'},
+      {name:'Determine Value Skill',  lvl:2,    note:''},
+      {name:'Escape Plan',            lvl:5,    note:'Compensated Anarchist class skill 🆕'},
+      {name:'Find Trap Skill',        lvl:5,    note:'Compensated Anarchist class skill 🆕'},
+      {name:'Hide in Shadows',        lvl:2,    note:'Compensated Anarchist class skill 🆕'},
+      {name:'Regeneration Skill',     lvl:7,    note:'Trollskin Shirt'},
+      {name:'Steady Hand Skill',      lvl:1,    note:''},
+    ],
+    explosiveSkills:[
+      {name:'Bomb Surgeon',                  lvl:1,  note:'Compensated Anarchist class skill 🆕'},
+      {name:'Dangerous Explosives Handling', lvl:7,  note:''},
+      {name:'Explosives Handling',           lvl:7,  note:''},
+      {name:'Goblin Explosives Skill',       lvl:5,  note:''},
+      {name:'IED Skill',                     lvl:7,  note:''},
+      {name:'Incendiary Device Handling',    lvl:5,  note:''},
+      {name:'Trap Engineer',                 lvl:1,  note:'Compensated Anarchist class skill 🆕'},
+    ],
+    spells:[
+      {name:'Fear Spell',       lvl:3,  note:'Gained on Floor 3 🆕'},
+      {name:'Protective Shell', lvl:15, note:'Big Boi Boxers'},
+    ],
+    otherSkills:[
+      {name:'Alchemy',         lvl:3,  note:'Floor 3 🆕'},
+      {name:'Cesta Punta',     lvl:3,  note:'Earth Hobby Potion 🆕'},
+      {name:'Chopper Pilot',   lvl:5,  note:''},
+      {name:'Slingshot Skill', lvl:3,  note:''},
+    ],
+    vehicleSkills:[],
+    gear:[
+      {slot:'Neck',       item:'Nightgaunt Cloak of Stoutness'},
+      {slot:'Undershirt', item:'Trollskin Shirt of Pummeling'},
+      {slot:'Jacket',     item:'Leather Coat (missing right arm)'},
+      {slot:'Wrists (R)', item:'Enchanted War Gauntlet of the Exalted Grull'},
+      {slot:'Legs',       item:'Enchanted Big Boi Boxers (upgraded: +5 DEX, +5 INT, +5 CON on Floor 3)'},
+      {slot:'Knees',      item:'Spiked Kneepads of the Shade Gnoll Riot Forces'},
+      {slot:'Feet',       item:'Enchanted Toe Ring of the Splatter Skunk (upgraded on Floor 3: +10 STR total)'},
+      {slot:'Hands',      item:'2× Rings of +2 STR each + Silver Ring +1 CON + Silver Ring +2 CON'},
+      {slot:'Other',      item:'Enchanted Pedicure Kit of the Sylph'},
+      {slot:'Tattoos',    item:'Desperado Pass (neck) + Goblin Pass (left forearm)'},
+    ],
+    passives:[
+      'Compensated Anarchist Class — "trapmaking, bomb-making, social-media dynamo"',
+      'Big Boi Boxers — Protective Shell Spell (radius: 3m + 0.5m/INT)',
+      'Gauntlet — 2% stun on hit',
+      'Spiked Kneepads — 10% Damage Reflect, blocks momentum attacks',
+      'Nightgaunt Cloak — Anti-Piercing, Ice Resist, Poison Resist',
+      'Trollskin Shirt — Regen +7, negates melee damage debuffs',
+      'Goblin Pass — Goblins white-tagged; +20% damage taken from goblins',
+      'Desperado Club — membership access',
+    ],
+  },
+];
+
+const DONUT_SNAPSHOTS = [
+  // ── BOOK 1, FLOOR 1 ──────────────────────────────────────────────
+  // Note: INT shown as base. Crown of Sepsis Whore adds +5 INT (bonus, not base).
+  // Talisman of the Slate Butterfly adds +1 INT (bonus). Base INT is the un-equipped value.
+  {
+    page:36, book:1, level:1, cls:'Cat', str:1, int:1, con:1, dex:8, chr:5, int2:null,
+    event:'Starting stats — just Bea\'s award-winning show cat. A housecat with a collar.',
+    combatSkills:[
+      {name:'Back Claw',   lvl:4, note:'starting skill'},
+      {name:'Slice Attack',lvl:4, note:'starting skill'},
+    ],
+    spells:[],
+    gear:[{slot:'Neck', item:'Collar (unenchanted)'}],
+    passives:[],
+  },
+  {
+    page:61, book:1, level:1, cls:'Cat (Crawler)', str:11, int:11, con:2, dex:8, chr:25, int2:null,
+    event:'Enhanced Legendary Pet Biscuit — MASSIVE stat explosion. STR 1→11, INT 1→11, CHR 5→25. She\'s a crawler now.',
+    combatSkills:[
+      {name:'Back Claw',   lvl:4, note:''},
+      {name:'Slice Attack',lvl:4, note:''},
+    ],
+    spells:[{name:'Magic Missile', lvl:1, note:'🆕'}],
+    gear:[{slot:'Neck', item:'Collar (unenchanted)'}],
+    passives:[],
+  },
+  {
+    page:64, book:1, level:1, cls:'Cat (Crawler)', str:11, int:16, con:2, dex:8, chr:25, int2:null,
+    event:'Enchanted Crown of the Sepsis Whore — +5 INT (base now 16 with crown), +15% Sepsis debuff on attacks. Good First Impression Skill +5.',
+    combatSkills:[
+      {name:'Back Claw',              lvl:4, note:''},
+      {name:'Good First Impression',  lvl:5, note:'From Crown of the Sepsis Whore'},
+      {name:'Slice Attack',           lvl:4, note:''},
+    ],
+    spells:[{name:'Magic Missile', lvl:1, note:''}],
+    gear:[
+      {slot:'Head', item:'Enchanted Crown of the Sepsis Whore (+5 INT, Good First Impression Skill +5)'},
+      {slot:'Neck', item:'Collar'},
+    ],
+    passives:[
+      'Crown of the Sepsis Whore — +15% chance to inflict Sepsis debuff on all attacks',
+    ],
+  },
+  {
+    page:74, book:1, level:2, cls:'Cat (Crawler)', str:12, int:17, con:2, dex:8, chr:27, int2:null,
+    event:'Level 2 with Enhanced Growth Buff — +1 STR, +1 INT (base), +2 CHR. Torch Spell gained after Hoarder fight.',
+    combatSkills:[
+      {name:'Back Claw',              lvl:4, note:''},
+      {name:'Good First Impression',  lvl:5, note:'Crown'},
+      {name:'Slice Attack',           lvl:4, note:''},
+    ],
+    spells:[
+      {name:'Magic Missile', lvl:1, note:''},
+      {name:'Torch Spell',   lvl:1, note:'🆕 gained after Hoarder fight'},
+    ],
+    gear:[
+      {slot:'Head', item:'Crown of the Sepsis Whore (+5 INT)'},
+      {slot:'Neck', item:'Collar'},
+    ],
+    passives:['Crown — +15% Sepsis debuff on all attacks'],
+  },
+  {
+    page:84, book:1, level:2, cls:'Cat (Crawler)', str:12, int:19, con:2, dex:8, chr:27, int2:null,
+    event:'Talisman of the Slate Butterfly (+1 INT base, +4 Light on Your Feet bonus). Puddle Jumper Spell gained after Juicer fight. Winged Fairies white-tagged.',
+    combatSkills:[
+      {name:'Back Claw',              lvl:4,    note:''},
+      {name:'Good First Impression',  lvl:5,    note:'Crown'},
+      {name:'Light on Your Feet',     lvl:'3 (7✦)', note:'Talisman +4 bonus when equipped'},
+      {name:'Slice Attack',           lvl:4,    note:''},
+    ],
+    spells:[
+      {name:'Magic Missile',   lvl:1, note:''},
+      {name:'Puddle Jumper',   lvl:1, note:'🆕 gained after Juicer fight'},
+      {name:'Torch Spell',     lvl:1, note:''},
+    ],
+    gear:[
+      {slot:'Head', item:'Enchanted Crown of the Sepsis Whore (+5 INT)'},
+      {slot:'Neck', item:'Enchanted Talisman of the Slate Butterfly (+1 INT, Light on Your Feet +4) on collar'},
+    ],
+    passives:[
+      'Crown — +15% Sepsis debuff on all attacks',
+      'Talisman — Winged Fairies white-tagged (free passage)',
+      'Talisman + Crupper — sounds like a bell when moving',
+    ],
+  },
+  {
+    page:91, book:1, level:5, cls:'Cat (Crawler)', str:15, int:21, con:2, dex:8, chr:33, int2:null,
+    event:'Level 5 with Enhanced Growth Buff — +1 STR, +1 INT (base), +2 CHR (×2 from class). Dodge Skill gained.',
+    combatSkills:[
+      {name:'Back Claw',              lvl:4, note:''},
+      {name:'Dodge Skill',            lvl:4, note:'🆕'},
+      {name:'Good First Impression',  lvl:5, note:'Crown'},
+      {name:'Light on Your Feet',     lvl:'3 (7✦)', note:'Talisman +4'},
+      {name:'Slice Attack',           lvl:4, note:''},
+    ],
+    spells:[
+      {name:'Magic Missile', lvl:3, note:'leveled up'},
+      {name:'Puddle Jumper', lvl:1, note:''},
+      {name:'Torch Spell',   lvl:1, note:''},
+    ],
+    gear:[
+      {slot:'Head', item:'Crown of the Sepsis Whore'},
+      {slot:'Neck', item:'Talisman of the Slate Butterfly on collar'},
+    ],
+    passives:[
+      'Crown — +15% Sepsis debuff on all attacks',
+      'Talisman — Winged Fairies white-tagged',
+    ],
+  },
+  {
+    page:120, book:1, level:7, cls:'Cat (Crawler)', str:17, int:23, con:2, dex:8, chr:35, int2:null,
+    event:'Level 7 with Enhanced Growth Buff — +1 STR, +1 INT, +2 CHR (×2). CHR 35. More charismatic than most humans.',
+    combatSkills:[
+      {name:'Back Claw',              lvl:4, note:''},
+      {name:'Dodge Skill',            lvl:4, note:''},
+      {name:'Good First Impression',  lvl:5, note:'Crown'},
+      {name:'Light on Your Feet',     lvl:'3 (7✦)', note:'Talisman +4'},
+      {name:'Slice Attack',           lvl:4, note:''},
+    ],
+    spells:[
+      {name:'Magic Missile', lvl:3, note:''},
+      {name:'Puddle Jumper', lvl:1, note:''},
+      {name:'Torch Spell',   lvl:1, note:''},
+    ],
+    gear:[
+      {slot:'Head', item:'Crown of the Sepsis Whore'},
+      {slot:'Neck', item:'Talisman of the Slate Butterfly on collar'},
+    ],
+    passives:[
+      'Crown — +15% Sepsis debuff on all attacks',
+      'Talisman — Winged Fairies white-tagged',
+    ],
+  },
+  {
+    page:138, book:1, level:8, cls:'Cat (Crawler)', str:18, int:24, con:2, dex:8, chr:39, int2:null,
+    event:'Level 8 — +1 STR, +1 INT, +2 CHR. CHR 39. Desperado Pass Tattoo gained (back).',
+    combatSkills:[
+      {name:'Back Claw',              lvl:4, note:''},
+      {name:'Dodge Skill',            lvl:4, note:''},
+      {name:'Good First Impression',  lvl:5, note:'Crown'},
+      {name:'Light on Your Feet',     lvl:'3 (7✦)', note:'Talisman +4'},
+      {name:'Slice Attack',           lvl:4, note:''},
+    ],
+    spells:[
+      {name:'Magic Missile', lvl:4, note:''},
+      {name:'Puddle Jumper', lvl:1, note:''},
+      {name:'Torch Spell',   lvl:1, note:''},
+    ],
+    gear:[
+      {slot:'Head',   item:'Crown of the Sepsis Whore'},
+      {slot:'Neck',   item:'Talisman of the Slate Butterfly on collar'},
+      {slot:'Tattoo', item:'Desperado Pass Tattoo (back) — Desperado Club access'},
+    ],
+    passives:[
+      'Crown — +15% Sepsis debuff on all attacks',
+      'Talisman — Winged Fairies white-tagged',
+      'Desperado Club — membership access',
+    ],
+  },
+  {
+    page:146, book:1, level:8, cls:'Cat (Crawler)', str:18, int:24, con:2, dex:10, chr:39, int2:null,
+    event:'Enchanted Fae Scale Quadruped Crupper of the Fleet (+2 DEX, waist slot). Now sounds like a bell when moving.',
+    combatSkills:[
+      {name:'Back Claw',              lvl:4, note:''},
+      {name:'Dodge Skill',            lvl:4, note:''},
+      {name:'Good First Impression',  lvl:5, note:'Crown'},
+      {name:'Light on Your Feet',     lvl:'3 (7✦)', note:'Talisman +4'},
+      {name:'Slice Attack',           lvl:4, note:''},
+    ],
+    spells:[
+      {name:'Magic Missile', lvl:4, note:''},
+      {name:'Puddle Jumper', lvl:1, note:''},
+      {name:'Torch Spell',   lvl:1, note:''},
+    ],
+    gear:[
+      {slot:'Head',   item:'Crown of the Sepsis Whore (+5 INT)'},
+      {slot:'Neck',   item:'Talisman of the Slate Butterfly (+1 INT) on collar'},
+      {slot:'Waist',  item:'Enchanted Fae Scale Quadruped Crupper of the Fleet (+2 DEX)'},
+      {slot:'Tattoo', item:'Desperado Pass Tattoo (back)'},
+    ],
+    passives:[
+      'Crown — +15% Sepsis debuff on all attacks',
+      'Talisman — Winged Fairies white-tagged',
+      'Talisman + Crupper — sounds like a bell when hopping or moving',
+      'Desperado Club — membership access',
+    ],
+  },
+  {
+    page:197, book:1, level:9, cls:'Cat (Crawler)', str:19, int:25, con:2, dex:12, chr:41, int2:null,
+    event:'Level 9 (+1 STR, +1 INT, +2 CHR) + Bracelet of +2 DEX (front leg). DEX 12.',
+    combatSkills:[
+      {name:'Back Claw',              lvl:4, note:''},
+      {name:'Dodge Skill',            lvl:4, note:''},
+      {name:'Good First Impression',  lvl:5, note:'Crown'},
+      {name:'Light on Your Feet',     lvl:'3 (7✦)', note:'Talisman +4'},
+      {name:'Slice Attack',           lvl:4, note:''},
+    ],
+    spells:[
+      {name:'Magic Missile', lvl:5, note:'wiki: ends Floor 1 at 5'},
+      {name:'Puddle Jumper', lvl:1, note:''},
+      {name:'Torch Spell',   lvl:1, note:'n/a (wiki note)'},
+    ],
+    gear:[
+      {slot:'Head',   item:'Crown of the Sepsis Whore'},
+      {slot:'Neck',   item:'Talisman of the Slate Butterfly on collar'},
+      {slot:'Waist',  item:'Fae Scale Crupper of the Fleet'},
+      {slot:'Legs',   item:'Bracelet of +2 DEX (front leg) 🆕'},
+      {slot:'Tattoo', item:'Desperado Pass Tattoo (back)'},
+    ],
+    passives:[
+      'Crown — +15% Sepsis debuff on all attacks',
+      'Talisman — Winged Fairies white-tagged',
+      'Talisman + Crupper — sounds like a bell',
+      'Desperado Club — membership access',
+    ],
+  },
+  {
+    page:218, book:1, level:10, cls:'Cat (Crawler)', str:20, int:26, con:2, dex:12, chr:43, int2:null,
+    event:'Level 10 — +1 STR, +1 INT, +2 CHR. CHR 43.',
+    combatSkills:[
+      {name:'Back Claw',              lvl:4, note:''},
+      {name:'Dodge Skill',            lvl:4, note:''},
+      {name:'Good First Impression',  lvl:5, note:'Crown'},
+      {name:'Light on Your Feet',     lvl:'3 (7✦)', note:'Talisman +4'},
+      {name:'Slice Attack',           lvl:4, note:''},
+    ],
+    spells:[
+      {name:'Magic Missile', lvl:5, note:''},
+      {name:'Puddle Jumper', lvl:1, note:''},
+      {name:'Torch Spell',   lvl:1, note:''},
+    ],
+    gear:[
+      {slot:'Head',   item:'Crown of the Sepsis Whore'},
+      {slot:'Neck',   item:'Talisman of the Slate Butterfly on collar'},
+      {slot:'Waist',  item:'Fae Scale Crupper of the Fleet'},
+      {slot:'Legs',   item:'Bracelet of +2 DEX'},
+      {slot:'Tattoo', item:'Desperado Pass Tattoo (back)'},
+    ],
+    passives:[
+      'Crown — +15% Sepsis debuff on all attacks',
+      'Talisman — Winged Fairies white-tagged',
+      'Desperado Club — membership access',
+    ],
+  },
+  {
+    page:285, book:1, level:11, cls:'Cat (Crawler)', str:21, int:27, con:2, dex:12, chr:45, int2:null,
+    event:'Level 11 — +1 STR, +1 INT, +2 CHR. CHR 45.',
+    combatSkills:[
+      {name:'Back Claw',              lvl:4, note:''},
+      {name:'Dodge Skill',            lvl:4, note:''},
+      {name:'Good First Impression',  lvl:5, note:'Crown'},
+      {name:'Light on Your Feet',     lvl:'3 (7✦)', note:'Talisman +4'},
+      {name:'Slice Attack',           lvl:4, note:''},
+    ],
+    spells:[
+      {name:'Magic Missile', lvl:5, note:''},
+      {name:'Puddle Jumper', lvl:1, note:''},
+      {name:'Torch Spell',   lvl:1, note:''},
+    ],
+    gear:[
+      {slot:'Head',   item:'Crown of the Sepsis Whore'},
+      {slot:'Neck',   item:'Talisman of the Slate Butterfly on collar'},
+      {slot:'Waist',  item:'Fae Scale Crupper of the Fleet'},
+      {slot:'Legs',   item:'Bracelet of +2 DEX'},
+      {slot:'Tattoo', item:'Desperado Pass Tattoo (back)'},
+    ],
+    passives:[
+      'Crown — +15% Sepsis debuff on all attacks',
+      'Talisman — Winged Fairies white-tagged',
+      'Desperado Club — membership access',
+    ],
+  },
+  {
+    page:398, book:1, level:12, cls:'Cat (Crawler)', str:22, int:28, con:2, dex:12, chr:47, int2:null,
+    event:'Level 12 — +1 STR, +1 INT, +2 CHR. CHR 47.',
+    combatSkills:[
+      {name:'Back Claw',              lvl:4, note:''},
+      {name:'Dodge Skill',            lvl:4, note:''},
+      {name:'Good First Impression',  lvl:5, note:'Crown'},
+      {name:'Light on Your Feet',     lvl:'3 (7✦)', note:'Talisman +4'},
+      {name:'Slice Attack',           lvl:4, note:''},
+    ],
+    spells:[
+      {name:'Magic Missile', lvl:5, note:''},
+      {name:'Puddle Jumper', lvl:1, note:''},
+      {name:'Torch Spell',   lvl:1, note:''},
+    ],
+    gear:[
+      {slot:'Head',   item:'Crown of the Sepsis Whore'},
+      {slot:'Neck',   item:'Talisman of the Slate Butterfly on collar'},
+      {slot:'Waist',  item:'Fae Scale Crupper of the Fleet'},
+      {slot:'Legs',   item:'Bracelet of +2 DEX'},
+      {slot:'Tattoo', item:'Desperado Pass Tattoo (back)'},
+    ],
+    passives:[
+      'Crown — +15% Sepsis debuff on all attacks',
+      'Talisman — Winged Fairies white-tagged',
+      'Desperado Club — membership access',
+    ],
+  },
+  {
+    page:421, book:1, level:13, cls:'Cat (Crawler)', str:23, int:29, con:2, dex:12, chr:49, int2:null,
+    event:'Level 13 — End of Book 1. STR 23, INT 29 (base), CHR 49. She is terrifying.',
+    combatSkills:[
+      {name:'Back Claw',              lvl:4, note:'wiki: starts + ends Floor 1 at 4'},
+      {name:'Dodge Skill',            lvl:4, note:'wiki: ends Floor 1 at 4'},
+      {name:'Good First Impression',  lvl:5, note:'Crown of the Sepsis Whore'},
+      {name:'Light on Your Feet',     lvl:'3 (7✦)', note:'Talisman of the Slate Butterfly +4'},
+      {name:'Slice Attack',           lvl:4, note:'wiki: starts + ends Floor 1 at 4'},
+    ],
+    spells:[
+      {name:'Magic Missile', lvl:5, note:'wiki: ends Floor 1 at 5'},
+      {name:'Puddle Jumper', lvl:1, note:'wiki: Floor 1 start level'},
+      {name:'Torch Spell',   lvl:1, note:'wiki: n/a (no stated final level)'},
+    ],
+    gear:[
+      {slot:'Head',   item:'Enchanted Crown of the Sepsis Whore (+5 INT, Good First Impression +5)'},
+      {slot:'Neck',   item:'Enchanted Talisman of the Slate Butterfly (+1 INT, Light on Your Feet +4) on collar'},
+      {slot:'Waist',  item:'Enchanted Fae Scale Quadruped Crupper of the Fleet (+2 DEX)'},
+      {slot:'Legs',   item:'Bracelet of +2 DEX (front leg)'},
+      {slot:'Tattoo', item:'Desperado Pass Tattoo (back)'},
+    ],
+    passives:[
+      'Crown of the Sepsis Whore — +15% chance to inflict Sepsis debuff on all attacks',
+      'Talisman of the Slate Butterfly — Winged Fairies white-tagged (free passage)',
+      'Talisman + Crupper — sounds like a bell when hopping or moving',
+      'Desperado Club — membership access (Desperado Pass Tattoo, back)',
+    ],
+  },
+  // ── BOOK 2, FLOOR 2 ──────────────────────────────────────────────
+  {
+    page:400, book:2, level:10, cls:'Cat (Crawler)', str:20, int:26, con:2, dex:12, chr:43, int2:null,
+    event:'Book 2 begins — Floor 2. Base stats from end of Floor 1. Second Chance Spell gained.',
+    combatSkills:[
+      {name:'Back Claw',              lvl:4, note:''},
+      {name:'Dodge Skill',            lvl:4, note:''},
+      {name:'Good First Impression',  lvl:5, note:'Crown'},
+      {name:'Light on Your Feet',     lvl:'3 (7✦)', note:'Talisman +4'},
+      {name:'Slice Attack',           lvl:4, note:''},
+    ],
+    spells:[
+      {name:'Magic Missile',  lvl:5,  note:''},
+      {name:'Puddle Jumper',  lvl:1,  note:''},
+      {name:'Second Chance',  lvl:1,  note:'🆕 Floor 2'},
+      {name:'Torch Spell',    lvl:1,  note:''},
+    ],
+    gear:[
+      {slot:'Head',   item:'Crown of the Sepsis Whore'},
+      {slot:'Neck',   item:'Talisman of the Slate Butterfly on collar'},
+      {slot:'Waist',  item:'Fae Scale Crupper of the Fleet'},
+      {slot:'Legs',   item:'Bracelet of +2 DEX'},
+      {slot:'Tattoo', item:'Desperado Pass Tattoo (back)'},
+    ],
+    passives:[
+      'Crown — +15% Sepsis debuff on all attacks',
+      'Talisman — Winged Fairies white-tagged',
+      'Desperado Club — membership access',
+    ],
+  },
+  {
+    page:440, book:2, level:11, cls:'Cat (Crawler)', str:21, int:27, con:4, dex:12, chr:45, int2:null,
+    event:'Level 11 (+1 STR, +1 INT, +2 CHR) + Enchanted Fur Brush of the Ecclesiastic (+2 CON for 30 hours). Second Chance leveled to 4.',
+    combatSkills:[
+      {name:'Back Claw',              lvl:4, note:''},
+      {name:'Dodge Skill',            lvl:4, note:''},
+      {name:'Good First Impression',  lvl:5, note:'Crown'},
+      {name:'Light on Your Feet',     lvl:'3 (7✦)', note:'Talisman +4'},
+      {name:'Slice Attack',           lvl:4, note:''},
+    ],
+    spells:[
+      {name:'Magic Missile',  lvl:5,  note:''},
+      {name:'Puddle Jumper',  lvl:1,  note:''},
+      {name:'Second Chance',  lvl:4,  note:'leveled up'},
+      {name:'Torch Spell',    lvl:1,  note:''},
+    ],
+    gear:[
+      {slot:'Head',   item:'Crown of the Sepsis Whore'},
+      {slot:'Neck',   item:'Talisman of the Slate Butterfly on collar'},
+      {slot:'Waist',  item:'Fae Scale Crupper of the Fleet'},
+      {slot:'Legs',   item:'Bracelet of +2 DEX'},
+      {slot:'Other',  item:'Enchanted Fur Brush of the Ecclesiastic (+2 CON for 30 hours)'},
+      {slot:'Tattoo', item:'Desperado Pass Tattoo (back)'},
+    ],
+    passives:[
+      'Crown — +15% Sepsis debuff on all attacks',
+      'Talisman — Winged Fairies white-tagged',
+      'Fur Brush buff (30hrs) — +2 CON',
+      'Desperado Club — membership access',
+    ],
+  },
+];
 <script>
 // ═══════════════════════════════════════════════════════
 // DATA — sourced from fandom wiki, floors 1-3
@@ -1445,8 +2409,8 @@ function gearContent(gear, passives) {
   }
   html += '<div class="section-title" style="margin-top:1rem">Passives & Buffs</div>';
   if (passives && passives.length) {
-    html += '<ul style="padding-left:1.2rem">' +
-      passives.map(p => `<li style="font-size:0.78rem;margin-bottom:0.3rem;color:var(--text)">${p}</li>`).join('') +
+    html += '<ul class="passives-list">' +
+      passives.map(p => `<li>${p}</li>`).join('') +
       '</ul>';
   } else {
     html += '<p class="empty-note">No passives at this point</p>';
