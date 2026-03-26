@@ -1,0 +1,634 @@
+[
+  {
+    "caption": "",
+    "rows": []
+  },
+  {
+    "caption": "",
+    "rows": []
+  },
+  {
+    "caption": "",
+    "rows": []
+  },
+  {
+    "caption": "",
+    "rows": []
+  },
+  {
+    "caption": "",
+    "rows": []
+  },
+  {
+    "caption": "",
+    "rows": []
+  },
+  {
+    "caption": "Book 1 Levels Expand",
+    "rows": [
+      [
+        "Level",
+        "Page"
+      ],
+      [
+        "2",
+        "50"
+      ],
+      [
+        "3",
+        "78"
+      ],
+      [
+        "5",
+        "92"
+      ],
+      [
+        "7",
+        "120"
+      ],
+      [
+        "8",
+        "138"
+      ],
+      [
+        "9",
+        "194"
+      ],
+      [
+        "10",
+        "218"
+      ],
+      [
+        "11",
+        "285"
+      ],
+      [
+        "12",
+        "398"
+      ],
+      [
+        "13",
+        "421"
+      ]
+    ]
+  },
+  {
+    "caption": "Book 1 Stats Expand",
+    "rows": [
+      [
+        "Page",
+        "Reason",
+        "STR",
+        "INT",
+        "CON",
+        "DEX",
+        "CHR"
+      ],
+      [
+        "36",
+        "Starting",
+        "6",
+        "3",
+        "5",
+        "5",
+        "4"
+      ],
+      [
+        "56",
+        "Nightgaunt Cloak of Stoutness +4 CON",
+        "6",
+        "3",
+        "9",
+        "5",
+        "4"
+      ],
+      [
+        "59",
+        "Toe Ring of the Splatter Skunk",
+        "9",
+        "3",
+        "9",
+        "5",
+        "4"
+      ],
+      [
+        "83",
+        "Silver ring +1 CON",
+        "9",
+        "3",
+        "10",
+        "5",
+        "4"
+      ],
+      [
+        "146",
+        "Ring of CON +2",
+        "9",
+        "3",
+        "12",
+        "5",
+        "4"
+      ],
+      [
+        "182",
+        "Carl states",
+        "9",
+        "3",
+        "12",
+        "5",
+        "4"
+      ],
+      [
+        "190",
+        "Carl states",
+        "9",
+        "3",
+        "12",
+        "5",
+        "4"
+      ],
+      [
+        "199",
+        "Enchanted War Gauntlet of the Exalted Grull +3 STR (in fist mode only), +1 DEX",
+        "9/12*",
+        "3",
+        "12",
+        "6",
+        "4"
+      ],
+      [
+        "293",
+        "Rev-Up Immunity Smoothie, Buzzed debuff (+3 CHR, -1 DEX)",
+        "9/12*",
+        "3",
+        "12",
+        "6/5*",
+        "4/7*"
+      ],
+      [
+        "307",
+        "Protective Shell radius 3m + 0.5m / INT",
+        "9/12*",
+        "3",
+        "12",
+        "6",
+        "4"
+      ],
+      [
+        "307",
+        "Enchanted Big Boi Boxers +2 CON",
+        "9/12*",
+        "3",
+        "14",
+        "6",
+        "4"
+      ],
+      [
+        "368",
+        "Carl states comparing to Zhang's 15 CON being 1 more than his own",
+        "9/12*",
+        "3",
+        "14",
+        "6",
+        "4"
+      ],
+      [
+        "STR = strength, INT = intelligence, CON = constitution, DEX = dexterity, CHR = charisma\nWhere a stat is directly stated or changed it is highlighted above, Mana points were also stated to be equivalent to intelligence points and hence used for reference of actual intelligence points."
+      ]
+    ]
+  },
+  {
+    "caption": "Book 2 Levels Expand",
+    "rows": [
+      [
+        "Level",
+        "Page"
+      ],
+      [
+        "13",
+        "29"
+      ],
+      [
+        "14",
+        "77"
+      ],
+      [
+        "15",
+        "109"
+      ],
+      [
+        "18",
+        "137"
+      ],
+      [
+        "19",
+        "230"
+      ],
+      [
+        "21",
+        "286"
+      ],
+      [
+        "27",
+        "345"
+      ]
+    ]
+  },
+  {
+    "caption": "Book 2 Stats Expand",
+    "rows": [
+      [
+        "Page",
+        "Reason",
+        "STR",
+        "INT",
+        "CON",
+        "DEX",
+        "CHR"
+      ],
+      [
+        "19",
+        "Primal Race Changes (-1 to all stats, pre point allocation)",
+        "8/11*",
+        "2",
+        "13",
+        "5",
+        "3"
+      ],
+      [
+        "24",
+        "Compensated Anarchist (+1 INT, +5 CHR)",
+        "8/11*",
+        "3",
+        "13",
+        "5",
+        "8"
+      ],
+      [
+        "28",
+        "Post Class Selection / Point Allocation (STR = Toe Ring + 3, / Gauntlet* + 3; CON = Shirt + 4, Ring + 1, Ring + 2, Boxers + 2)",
+        "13/16*",
+        "5",
+        "19",
+        "11",
+        "25"
+      ],
+      [
+        "58",
+        "2 Rings of +2 STR",
+        "17/20*",
+        "5",
+        "19",
+        "11",
+        "25"
+      ],
+      [
+        "93",
+        "Allocated Points +3 STR",
+        "20/23*",
+        "5",
+        "19",
+        "11",
+        "25"
+      ],
+      [
+        "127",
+        "Takes off Nightgaunt Cloak - 4 CON temporarily",
+        "20/23*",
+        "5",
+        "15*",
+        "11",
+        "25"
+      ],
+      [
+        "134",
+        "Wisp Armor minimum 5 mana (6 min timer 5 mana + 1 spell level)",
+        "20/23*",
+        "5",
+        "15*",
+        "11",
+        "25"
+      ],
+      [
+        "159",
+        "Enchanted BigBoi Boxers (enchantment adds +5 DEX, +5 INT, +3 [total +5] CON)",
+        "20/23*",
+        "10",
+        "22",
+        "16",
+        "25"
+      ],
+      [
+        "164",
+        "+10 STR, +2 CON allocated",
+        "30/33*",
+        "10",
+        "24",
+        "16",
+        "25"
+      ],
+      [
+        "345",
+        "24 Stats to assign",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "STR = strength, INT = intelligence, CON = constitution, DEX = dexterity, CHR = charisma\nWhere a stat is directly stated or changed it is highlighted above, Mana points were also stated to be equivalent to intelligence points and hence used for reference of actual intelligence points."
+      ]
+    ]
+  },
+  {
+    "caption": "Book 3 Levels Expand",
+    "rows": [
+      [
+        "Level",
+        "Page"
+      ],
+      [
+        "27",
+        "24"
+      ],
+      [
+        "28",
+        "100"
+      ],
+      [
+        "29",
+        "155"
+      ],
+      [
+        "32",
+        "220"
+      ],
+      [
+        "34",
+        "347"
+      ],
+      [
+        "35",
+        "402"
+      ],
+      [
+        "41",
+        "506"
+      ]
+    ]
+  },
+  {
+    "caption": "Book 3 Stats Expand",
+    "rows": [
+      [
+        "Page",
+        "Reason",
+        "STR",
+        "INT",
+        "CON",
+        "DEX",
+        "CHR"
+      ],
+      [
+        "-",
+        "End book 2 Base / With Gauntlet (+3 STR)",
+        "30/33*",
+        "10",
+        "24",
+        "16",
+        "25"
+      ],
+      [
+        "-",
+        "24 Stats to assign",
+        "30/33*",
+        "10",
+        "24",
+        "16",
+        "25"
+      ],
+      [
+        "8",
+        "Katia CON (102) ~4x Carls",
+        "30/33*",
+        "10",
+        "24",
+        "16",
+        "25"
+      ],
+      [
+        "12",
+        "Mascot bonus 5% bonus DEX and CON temporary",
+        "30/33*",
+        "10",
+        "25",
+        "16",
+        "25"
+      ],
+      [
+        "29",
+        "Enchanted Necklace of the Haute Bourgeoisie (+5 DEX)",
+        "30/33*",
+        "10",
+        "24",
+        "21",
+        "25"
+      ],
+      [
+        "36",
+        "Distribution of accumulated stat points (+10 STR, +9 CON, +5 INT)",
+        "41/44*",
+        "15",
+        "34",
+        "23",
+        "25"
+      ],
+      [
+        "39",
+        "Ultra-Stabilized, Size-adjustable, race-adjustable alleviating sleep apparatus: Good Rest bonus +10% all stats(**)",
+        "41/45/48**",
+        "15/16**",
+        "34/37**",
+        "23/25**",
+        "25/27**"
+      ],
+      [
+        "40",
+        "Automatic Shower +10% all stats (***)",
+        "41/49/52***",
+        "15/18**",
+        "34/40**",
+        "23/27**",
+        "25/30**"
+      ],
+      [
+        "137",
+        "You’ve been Juiced! 10% Temporary buff to Strength! (Imani passive skill)",
+        "41/53/56***",
+        "15/18**",
+        "34/40**",
+        "23/27**",
+        "25/30**"
+      ],
+      [
+        "146",
+        "Enchanted Toe Ring of the Splatter Skunk (Upgraded) +10 STR (+7 from upgrade)",
+        "48/57/60***",
+        "15/18**",
+        "34/40**",
+        "23/27**",
+        "25/30**"
+      ],
+      [
+        "235",
+        "Scroll of upgrade +3 DEX on Trollskin Shirt",
+        "48/57/60***",
+        "15/18**",
+        "34/40**",
+        "26/31**",
+        "25/30**"
+      ],
+      [
+        "236",
+        "Stat allocation: +6 STR, +3 CON",
+        "54/64/67***",
+        "15/18**",
+        "37/44**",
+        "26/31**",
+        "25/30**"
+      ],
+      [
+        "289",
+        "Enchanted Night Wyrm’s Ring of Divine Suffering (+5% to all stats)",
+        "54/68/71***",
+        "15/18**",
+        "37/46**",
+        "26/32**",
+        "25/31**"
+      ],
+      [
+        "442",
+        "Ring of Divine Suffering taken off (-5% all stats)",
+        "54/64/67***",
+        "15/18**",
+        "37/44**",
+        "26/31**",
+        "25/30**"
+      ],
+      [
+        "455",
+        "Imani CON buff (10 minutes, no specifics stated)",
+        "54/64/67***",
+        "15/18**",
+        "37/44**",
+        "26/31**",
+        "25/30**"
+      ],
+      [
+        "493",
+        "Dude! Where’d you go? You are invisible for 30 seconds (INT x2)",
+        "54/64/67***",
+        "15/18**",
+        "37/44**",
+        "26/31**",
+        "25/30**"
+      ],
+      [
+        "STR = strength, INT = intelligence, CON = constitution, DEX = dexterity, CHR = charisma\nWhere a stat is directly stated or changed it is highlighted above, Mana points were also stated to be equivalent to intelligence points and hence used for reference of actual intelligence points."
+      ]
+    ]
+  },
+  {
+    "caption": "Book 4 Levels Expand",
+    "rows": [
+      [
+        "Level",
+        "Page"
+      ],
+      [
+        "41",
+        "85"
+      ],
+      [
+        "44",
+        "291"
+      ],
+      [
+        "47",
+        "606"
+      ]
+    ]
+  },
+  {
+    "caption": "Book 5 Levels Expand",
+    "rows": [
+      [
+        "Level",
+        "Page"
+      ],
+      [
+        "54",
+        "87"
+      ],
+      [
+        "55",
+        "216"
+      ],
+      [
+        "56",
+        "456"
+      ],
+      [
+        "59",
+        "545"
+      ],
+      [
+        "63",
+        "637"
+      ]
+    ]
+  },
+  {
+    "caption": "Book 6 Levels Expand",
+    "rows": [
+      [
+        "Level",
+        "Page"
+      ],
+      [
+        "65",
+        "229"
+      ],
+      [
+        "68",
+        "377"
+      ],
+      [
+        "73",
+        "656"
+      ]
+    ]
+  },
+  {
+    "caption": "Book 7 Levels Expand",
+    "rows": [
+      [
+        "Level",
+        "Page"
+      ],
+      [
+        "74",
+        "267"
+      ],
+      [
+        "75",
+        "395"
+      ],
+      [
+        "81",
+        "618"
+      ]
+    ]
+  }
+]
