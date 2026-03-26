@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dungeon Crawler Carl — Character Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@900&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   :root {
@@ -49,17 +49,16 @@
     background: linear-gradient(180deg, rgba(255,107,26,0.06) 0%, transparent 100%);
   }
   .title {
-    font-family: 'Boogaloo', 'Bebas Neue', sans-serif;
-    font-size: clamp(3rem, 9vw, 7rem);
-    letter-spacing: 0.02em;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.8rem, 8.5vw, 6.5rem);
+    letter-spacing: -0.01em;
     color: var(--carl);
     text-shadow:
-      3px 3px 0 #000,
-      -1px -1px 0 #000,
-      0 0 25px rgba(255,107,26,0.8),
-      0 0 60px rgba(255,107,26,0.35);
+      0 0 25px rgba(255,107,26,0.9),
+      0 0 60px rgba(255,107,26,0.4),
+      3px 3px 0 #1a0800;
     line-height: 1;
-    -webkit-text-stroke: 1px rgba(0,0,0,0.4);
   }
   .subtitle {
     font-size: clamp(0.75rem, 2vw, 1rem);
@@ -166,11 +165,11 @@
   .donut .panel-header::after { background: linear-gradient(90deg, transparent, var(--donut), transparent); }
 
   .char-name {
-    font-family: 'Boogaloo', 'Bebas Neue', sans-serif;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
     font-size: 2rem;
-    letter-spacing: 0.05em;
+    letter-spacing: -0.01em;
     line-height: 1;
-    -webkit-text-stroke: 1px rgba(0,0,0,0.3);
   }
   .carl .char-name { color: var(--carl); text-shadow: 0 0 20px var(--carl-glow); }
   .donut .char-name { color: var(--donut); text-shadow: 0 0 20px var(--donut-glow); }
