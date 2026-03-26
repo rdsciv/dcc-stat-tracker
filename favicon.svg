@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" rx="6" fill="#0a0608"/>
+  <circle cx="16" cy="16" r="13" fill="none" stroke="#FF6B1A" stroke-width="2.5" opacity="0.3"/>
+  <text x="16" y="22" font-family="Arial Black, sans-serif" font-weight="900" font-size="20" 
+        fill="#FF6B1A" text-anchor="middle" 
+        filter="url(#glow)">C</text>
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+</svg>
