@@ -24,7 +24,8 @@ An interactive character tracker for Carl and Princess Donut from Matt Dinniman'
 |------|------|-------|
 | Book 1 (Floor 1) | ✅ Full | ✅ Full |
 | Book 2 (Floor 2) | ✅ Stats + class | ✅ Stats + spells |
-| Book 3+ | Partial stats | Partial stats |
+| Book 3 (Floor 4) | ✅ 4 snapshots (pp. 36–506) | ✅ 3 snapshots (pp. 36–506) |
+| Book 4+ | ❌ Not yet added | ❌ Not yet added |
 
 All data sourced from [dungeon-crawler-carl.fandom.com](https://dungeon-crawler-carl.fandom.com). Stats are verified against the wiki's chapter-by-chapter tracking tables.
 
@@ -68,5 +69,6 @@ If you spot a stat error or want to add Book 3+ data, open a PR. The data lives 
 
 | Date | Change |
 |------|--------|
+| 2026-03-30 | Clarified data coverage table: Book 3 has 4 Carl + 3 Donut snapshots; Book 4+ noted as not yet added |
 | 2026-03-30 | Added changelog section; noted Chart.js + Google Fonts as only external deps |
 | 2026-03-20 | Initial release — Books 1–3 stat data, radar charts, timeline scrubber |
