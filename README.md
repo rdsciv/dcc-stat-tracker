@@ -61,3 +61,12 @@ If you spot a stat error or want to add Book 3+ data, open a PR. The data lives 
 ---
 
 *You will not break me. You will not fucking break me.* — Carl
+
+---
+
+## Changelog
+
+| Date | Change |
+|------|--------|
+| 2026-03-30 | Added changelog section; noted Chart.js + Google Fonts as only external deps |
+| 2026-03-20 | Initial release — Books 1–3 stat data, radar charts, timeline scrubber |
