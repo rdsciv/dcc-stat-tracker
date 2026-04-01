@@ -61,6 +61,15 @@ If you spot a stat error or want to add Book 3+ data, open a PR. The data lives 
 
 ---
 
+## Usage Tips
+
+- **Page Lookup:** Enter any page number and the tracker snaps to the nearest snapshot at or before that page — great for following along as you read
+- **Timeline scrubber:** Drag the slider to sweep through every stat change point chronologically
+- **Color-coded stats:** Green = increased since last snapshot, red = decreased, white = unchanged
+- **🆕 badge:** Flags skills or spells newly acquired at that snapshot
+
+---
+
 *You will not break me. You will not fucking break me.* — Carl
 
 ---
@@ -69,6 +78,7 @@ If you spot a stat error or want to add Book 3+ data, open a PR. The data lives 
 
 | Date | Change |
 |------|--------|
+| 2026-04-01 | Added Usage Tips section to README — page lookup, timeline scrubber, color-coded stats, 🆕 badge explained |
 | 2026-03-31 | Added contributing note: each snapshot entry schema documented inline with str2/equipped stat fields |
 | 2026-03-30 | Clarified data coverage table: Book 3 has 4 Carl + 3 Donut snapshots; Book 4+ noted as not yet added |
 | 2026-03-30 | Added changelog section; noted Chart.js + Google Fonts as only external deps |
