@@ -70,6 +70,15 @@ If you spot a stat error or want to add Book 3+ data, open a PR. The data lives 
 
 ---
 
+## Roadmap
+
+- [ ] **Book 4+ data** — Floors 5–8 stats, skills, and gear
+- [ ] **Donut companion sheet** — Dedicated view for Donut's full skill and spell tree
+- [ ] **Mobile layout** — Responsive improvements for small screens
+- [ ] **Search** — Filter skills/spells by name across all snapshots
+
+---
+
 *You will not break me. You will not fucking break me.* — Carl
 
 ---
@@ -78,6 +87,7 @@ If you spot a stat error or want to add Book 3+ data, open a PR. The data lives 
 
 | Date | Change |
 |------|--------|
+| 2026-04-02 | Added roadmap section — Book 4+ data, Donut companion sheet, mobile layout improvements |
 | 2026-04-01 | Added Usage Tips section to README — page lookup, timeline scrubber, color-coded stats, 🆕 badge explained |
 | 2026-03-31 | Added contributing note: each snapshot entry schema documented inline with str2/equipped stat fields |
 | 2026-03-30 | Clarified data coverage table: Book 3 has 4 Carl + 3 Donut snapshots; Book 4+ noted as not yet added |
